@@ -1,16 +1,16 @@
 output "vpc_id" {
   description = "The VPC ID"
-  value       = aws_vpc.this.id
+  value       = aws_vpc.demo.id
 }
 
 output "vpc_arn" {
   description = "The VPC ARN"
-  value       = aws_vpc.this.arn
+  value       = aws_vpc.demo.arn
 }
 
 output "vpc_cidr_block" {
   description = "The CIDR block of the VPC"
-  value       = aws_vpc.this.cidr_block
+  value       = aws_vpc.demo.cidr_block
 }
 
 output "private_subnets" {
