@@ -7,10 +7,16 @@ resource "aws_vpc" "demo" {
 
 resource "aws_route_table" "private_route_table" {
   vpc_id = aws_vpc.demo.id
+  tags = {
+    Name = "${var.project}-private"
+  }
 }
 
 resource "aws_default_route_table" "default_route_table" {
   default_route_table_id = aws_vpc.demo.default_route_table_id
+  tags = {
+    Name = "${var.project}-default"
+  }
 }
 
 resource "aws_route_table_association" "private_route_table_association" {
@@ -26,6 +32,9 @@ resource "aws_subnet" "private" {
   vpc_id            = aws_vpc.demo.id
   cidr_block        = var.private_subnets[each.key]
   availability_zone = element(var.azs, each.key)
+  tags = {
+    Name = "${var.project}-private-${var.private_subnets[each]}"
+  }
 }
 
 data "aws_vpc_endpoint_service" "s3" {
@@ -40,6 +49,9 @@ resource "aws_vpc_endpoint" "s3" {
 
   vpc_id       = aws_vpc.demo.id
   service_name = data.aws_vpc_endpoint_service.s3[0].service_name
+  tags = {
+    Name = "${var.project}-s3-endpoint"
+  }
 }
 
 resource "aws_vpc_endpoint_route_table_association" "private_s3" {
@@ -60,6 +72,9 @@ resource "aws_vpc_endpoint" "dynamodb" {
 
   vpc_id       = aws_vpc.demo.id
   service_name = data.aws_vpc_endpoint_service.dynamodb[0].service_name
+  tags = {
+    Name = "${var.project}-dynamodb-endpoint"
+  }
 }
 
 data "aws_subnet" "demo" {
