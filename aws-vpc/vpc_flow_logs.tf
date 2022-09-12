@@ -16,7 +16,7 @@ module "iam_role_vpc_flow_log" {
   policy_document     = data.aws_iam_policy_document.vpc_flow_log_cloudwatch.json
   service_principals  = ["vpc-flow-logs.amazonaws.com"]
   assume_role_policy  = data.aws_iam_policy_document.flow_log_cloudwatch_assume_role.json
-  name                = var.project
+  role_name                = var.project
 }
 
 data "aws_iam_policy_document" "flow_log_cloudwatch_assume_role" {

@@ -1,8 +1,15 @@
 variable "policy_document" {
+  type    = bool
   default = false
 }
 
+variable "project" {
+  type    = string
+  default = ""
+}
+
 variable "assume_role_policy" {
+  type    = string
   default = ""
 }
 
