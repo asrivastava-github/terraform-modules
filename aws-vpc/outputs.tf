@@ -28,11 +28,6 @@ output "aws_vpc_endpoint_s3" {
   value       = aws_vpc_endpoint.s3.*.id
 }
 
-output "aws_vpc_endpoint_ssm" {
-  description = "ID of the SSM VPC endpoint"
-  value       = aws_vpc_endpoint.ssm.*.id
-}
-
 output "aws_vpc_endpoint_dynamodb" {
   description = "ID of the dynamodb VPC endpoint"
   value       = aws_vpc_endpoint.dynamodb.*.id

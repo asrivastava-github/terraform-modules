@@ -9,12 +9,6 @@ locals {
   ]
 }
 
-resource "aws_security_group" "ssm" {
-  name        = "ssm"
-  description = "Allow SSM traffic"
-  vpc_id      = module.vpc.vpc_id
-}
-
 resource "aws_security_group_rule" "https" {
   type              = "ingress"
   from_port         = 443
@@ -31,14 +25,8 @@ module "vpc" {
   private_subnets = local.private_subnets
   environment     = "Demo"
 
-  enable_dns_hostnames                = true
-  enable_dns_support                  = true
   enable_s3_vpc_endpoint              = true
   enable_dynamodb_vpc_endpoint        = true
-  enable_ssm_vpc_endpoint             = true
-  enable_ssm_vpc_endpoint_private_dns = true
-  ssm_vpc_endpoint_security_group_ids = [aws_security_group.ssm.id]
-
 }
 
 output "vpc_id" {
