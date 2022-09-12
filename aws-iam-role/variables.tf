@@ -1,11 +1,5 @@
-variable "project" {
-  default = "eit"
-}
-
-variable "service" {
-}
-
 variable "environment" {
+  type = string
 }
 
 variable "policy_document" {
