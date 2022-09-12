@@ -1,8 +1,5 @@
 resource "aws_vpc" "demo" {
   cidr_block           = var.vpc_cidr_block
-  tags = {
-    Name = var.project
-  }
 }
 
 resource "aws_route_table" "private_route_table" {
