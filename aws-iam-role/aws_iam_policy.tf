@@ -4,5 +4,4 @@ resource "aws_iam_policy" "default" {
   path        = "/"
   description = "Policy for ${var.project} ${var.environment} ${var.service}"
   policy      = var.policy_document
-  tags        = merge(module.tags.tags, { "Name" : var.policy_name })
 }

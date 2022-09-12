@@ -13,7 +13,6 @@ resource "aws_security_group" "ssm" {
   name        = "ssm"
   description = "Allow SSM traffic"
   vpc_id      = module.vpc.vpc_id
-  tags        = module.tags.tags
 }
 
 resource "aws_security_group_rule" "https" {

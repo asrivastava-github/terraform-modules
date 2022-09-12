@@ -2,18 +2,14 @@ resource "aws_vpc" "demo" {
   cidr_block           = var.vpc_cidr_block
   enable_dns_hostnames = var.enable_dns_hostnames
   enable_dns_support   = var.enable_dns_support
-  tags                 = module.tags.tags
 }
 
 resource "aws_route_table" "private_route_table" {
   vpc_id = aws_vpc.demo.id
-  tags   = module.tags.tags
 }
 
 resource "aws_default_route_table" "default_route_table" {
   default_route_table_id = aws_vpc.demo.default_route_table_id
-
-  tags = module.tags.tags
 }
 
 resource "aws_route_table_association" "private_route_table_association" {
@@ -29,7 +25,6 @@ resource "aws_subnet" "private" {
   vpc_id            = aws_vpc.demo.id
   cidr_block        = var.private_subnets[each.key]
   availability_zone = element(var.azs, each.key)
-  tags              = module.tags.tags
 }
 
 data "aws_vpc_endpoint_service" "s3" {
@@ -44,7 +39,6 @@ resource "aws_vpc_endpoint" "s3" {
 
   vpc_id       = aws_vpc.demo.id
   service_name = data.aws_vpc_endpoint_service.s3[0].service_name
-  tags         = module.tags.tags
 }
 
 resource "aws_vpc_endpoint_route_table_association" "private_s3" {
@@ -65,7 +59,6 @@ resource "aws_vpc_endpoint" "dynamodb" {
 
   vpc_id       = aws_vpc.demo.id
   service_name = data.aws_vpc_endpoint_service.dynamodb[0].service_name
-  tags         = module.tags.tags
 }
 
 data "aws_subnet" "demo" {

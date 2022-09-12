@@ -4,15 +4,11 @@ resource "aws_flow_log" "vpc" {
   iam_role_arn         = module.iam_role_vpc_flow_log.arn
   traffic_type         = "ALL"
   vpc_id               = aws_vpc.demo.id
-
-  tags = module.tags.tags
 }
 
 resource "aws_cloudwatch_log_group" "flow_log_vpc" {
   name              = "/${aws_vpc.demo.id}/"
   retention_in_days = 365
-
-  tags = module.tags.tags
 }
 
 module "iam_role_vpc_flow_log" {
