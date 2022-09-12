@@ -33,7 +33,7 @@ resource "aws_subnet" "private" {
   cidr_block        = var.private_subnets[each.key]
   availability_zone = element(var.azs, each.key)
   tags = {
-    Name = "${var.project}-private-${index(var.private_subnets, each.value)}"
+    Name = "${var.project}-private-${each.key}"
   }
 }
 
