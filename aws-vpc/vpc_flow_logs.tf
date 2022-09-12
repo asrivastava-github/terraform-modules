@@ -12,10 +12,11 @@ resource "aws_cloudwatch_log_group" "flow_log_vpc" {
 }
 
 module "iam_role_vpc_flow_log" {
-  source               = "../aws-iam-role"
-  policy_document      = data.aws_iam_policy_document.vpc_flow_log_cloudwatch.json
-  service_principals   = ["vpc-flow-logs.amazonaws.com"]
-  assume_role_policy   = data.aws_iam_policy_document.flow_log_cloudwatch_assume_role.json
+  source              = "../aws-iam-role"
+  policy_document     = data.aws_iam_policy_document.vpc_flow_log_cloudwatch.json
+  service_principals  = ["vpc-flow-logs.amazonaws.com"]
+  assume_role_policy  = data.aws_iam_policy_document.flow_log_cloudwatch_assume_role.json
+  name                = var.project
 }
 
 data "aws_iam_policy_document" "flow_log_cloudwatch_assume_role" {
