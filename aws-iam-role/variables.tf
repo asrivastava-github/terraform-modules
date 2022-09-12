@@ -1,7 +1,3 @@
-variable "environment" {
-  type = string
-}
-
 variable "policy_document" {
   default = false
 }
