@@ -61,7 +61,6 @@
 | <a name="input_private_subnets"></a> [private\_subnets](#input\_private\_subnets) | The private subnet CIDR ranges. | `list(string)` | n/a | yes |
 | <a name="input_project"></a> [project](#input\_project) | The project to be used for naming | `string` | n/a | yes |
 | <a name="input_ssm_vpc_endpoint_security_group_ids"></a> [ssm\_vpc\_endpoint\_security\_group\_ids](#input\_ssm\_vpc\_endpoint\_security\_group\_ids) | The ID's of security groups that should be associated with network interface for the interface endpoint | `list(string)` | `[]` | no |
-| <a name="input_tags_override"></a> [tags\_override](#input\_tags\_override) | A custom map of tags to override default tags. | `map(string)` | `{}` | no |
 | <a name="input_transit_account_id"></a> [transit\_account\_id](#input\_transit\_account\_id) | Transit Gateway ID, used for creating R53 resolver rules | `string` | `""` | no |
 | <a name="input_vpc_cidr_block"></a> [vpc\_cidr\_block](#input\_vpc\_cidr\_block) | The CIDR block of the VPC. | `string` | n/a | yes |
 

@@ -76,9 +76,3 @@ variable "ssm_vpc_endpoint_security_group_ids" {
   type        = list(string)
   default     = []
 }
-
-variable "tags_override" {
-  type        = map(string)
-  description = "A custom map of tags to override default tags."
-  default     = {}
-}

@@ -40,7 +40,6 @@ module "vpc" {
   enable_ssm_vpc_endpoint_private_dns = true
   ssm_vpc_endpoint_security_group_ids = [aws_security_group.ssm.id]
 
-  tags_override = module.tags.tags
 }
 
 output "vpc_id" {
