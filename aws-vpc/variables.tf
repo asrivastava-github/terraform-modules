@@ -1,3 +1,8 @@
+variable "project" {
+  description = "Name of project"
+  type        = string
+}
+
 variable "environment" {
   description = "The project environment to be used for naming"
   type        = string
