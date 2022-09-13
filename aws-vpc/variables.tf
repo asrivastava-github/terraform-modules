@@ -23,7 +23,7 @@ variable "private_subnets" {
   type        = list(string)
 }
 
-variable "aws_region" {
+variable "region" {
   description = "Region to deploy the application."
   type        = string
   default     = "eu-west-1"

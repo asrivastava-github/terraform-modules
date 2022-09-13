@@ -40,7 +40,7 @@ resource "aws_subnet" "private" {
 # Create and attach a Network access control list to private subnet for traffic control
 resource "aws_network_acl" "nacl_private" {
   vpc_id     = aws_vpc.demo.id
-  subnet_ids = aws_subnet.private.id
+  subnet_ids = [for k, v in aws_subnet.private : aws_subnet.private[k].id]
   tags = {
     Name = "${var.project}-private-acl"
   }
@@ -49,7 +49,7 @@ resource "aws_network_acl" "nacl_private" {
 
 
 data "aws_ip_ranges" "dynamodb_region" {
-  regions  = [var.aws_region]
+  regions  = [var.region]
   services = ["dynamodb"]
 }
 
