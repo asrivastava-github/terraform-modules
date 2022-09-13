@@ -52,7 +52,7 @@ resource "aws_network_acl_rule" "private_nacl_rules_in_dynamoDB_EP" {
   network_acl_id = aws_network_acl.nacl_private.id
   protocol       = "tcp"
   rule_action    = "allow"
-  rule_number    = count.index * 10 + 400
+  rule_number    = 100
   cidr_block     = "0.0.0.0/0"
   to_port        = 65535
   from_port      = 1024
