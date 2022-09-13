@@ -47,20 +47,13 @@ resource "aws_network_acl" "nacl_private" {
   depends_on = [aws_vpc.demo]
 }
 
-
-data "aws_ip_ranges" "dynamodb_region" {
-  regions  = [var.region]
-  services = ["dynamodb"]
-}
-
-# Provide a way for DynamoDB response to reach to lambda. Access to DynamoDB service ips list on ephemeral ports
+# Provide a way for DynamoDB response to reach to lambda. Access on ephemeral ports
 resource "aws_network_acl_rule" "private_nacl_rules_in_dynamoDB_EP" {
-  count          = length(data.aws_ip_ranges.dynamodb_region.cidr_blocks)
   network_acl_id = aws_network_acl.nacl_private.id
   protocol       = "tcp"
   rule_action    = "allow"
   rule_number    = count.index * 10 + 400
-  cidr_block     = data.aws_ip_ranges.dynamodb_region.cidr_blocks[count.index]
+  cidr_block     = "0.0.0.0/0"
   to_port        = 65535
   from_port      = 1024
   lifecycle {
