@@ -44,7 +44,7 @@ resource "aws_network_acl" "nacl_private" {
   tags = {
     Name = "${var.project}-private-acl"
   }
-  depends_on = [aws_vpc.app_vpc]
+  depends_on = [aws_vpc.demo]
 }
 
 
