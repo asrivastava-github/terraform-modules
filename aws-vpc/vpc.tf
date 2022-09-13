@@ -37,6 +37,38 @@ resource "aws_subnet" "private" {
   }
 }
 
+# Create and attach a Network access control list to private subnet for traffic control
+resource "aws_network_acl" "nacl_private" {
+  vpc_id     = aws_vpc.demo.id
+  subnet_ids = aws_subnet.private.*.id
+  tags = {
+    Name = "${var.project}-private-acl"
+  }
+  depends_on = [aws_vpc.app_vpc]
+}
+
+
+data "aws_ip_ranges" "dynamodb_region" {
+  regions  = [var.tf_region]
+  services = ["dynamodb"]
+}
+
+# Provide a way for DynamoDB response to reach to lambda. Access to DynamoDB service ips list on ephemeral ports
+resource "aws_network_acl_rule" "private_nacl_rules_in_dynamoDB_EP" {
+  count          = length(data.aws_ip_ranges.dynamodb_region.cidr_blocks)
+  network_acl_id = aws_network_acl.nacl_private.id
+  protocol       = "tcp"
+  rule_action    = "allow"
+  rule_number    = count.index * 10 + 400
+  cidr_block     = data.aws_ip_ranges.dynamodb_region.cidr_blocks[count.index]
+  to_port        = 65535
+  from_port      = 1024
+  lifecycle {
+    create_before_destroy = false
+  }
+  depends_on = [aws_vpc.app_vpc]
+}
+
 data "aws_vpc_endpoint_service" "s3" {
   count = var.enable_s3_vpc_endpoint ? 1 : 0
 
