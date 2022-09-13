@@ -49,7 +49,7 @@ resource "aws_network_acl" "nacl_private" {
 
 
 data "aws_ip_ranges" "dynamodb_region" {
-  regions  = [var.tf_region]
+  regions  = [var.aws_region]
   services = ["dynamodb"]
 }
 
