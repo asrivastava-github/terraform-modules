@@ -23,6 +23,12 @@ variable "private_subnets" {
   type        = list(string)
 }
 
+variable "aws_region" {
+  description = "Region to deploy the application."
+  type        = string
+  default     = "eu-west-1"
+}
+
 variable "enable_s3_vpc_endpoint" {
   description = "Enable gateway endpoint for AWS S3 service."
   type        = bool

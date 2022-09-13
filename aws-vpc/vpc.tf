@@ -66,7 +66,7 @@ resource "aws_network_acl_rule" "private_nacl_rules_in_dynamoDB_EP" {
   lifecycle {
     create_before_destroy = false
   }
-  depends_on = [aws_vpc.app_vpc]
+  depends_on = [aws_vpc.demo]
 }
 
 data "aws_vpc_endpoint_service" "s3" {
