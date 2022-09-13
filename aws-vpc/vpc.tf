@@ -40,7 +40,7 @@ resource "aws_subnet" "private" {
 # Create and attach a Network access control list to private subnet for traffic control
 resource "aws_network_acl" "nacl_private" {
   vpc_id     = aws_vpc.demo.id
-  subnet_ids = aws_subnet.private.*.id
+  subnet_ids = aws_subnet.private.id
   tags = {
     Name = "${var.project}-private-acl"
   }
