@@ -12,3 +12,8 @@ variable "bucket_name" {
   description = "name of s3 bucket"
   type        = string
 }
+
+variable "force_destroy" {
+  description = "Whether to destroy s3 bucket even if it got objects in it"
+  type        = bool
+}
