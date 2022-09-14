@@ -1,7 +1,7 @@
 resource "aws_vpc" "demo" {
   cidr_block           = var.vpc_cidr_block
   tags = {
-    Name = "${var.project}"
+    Name = "${var.project}-${var.environment}"
   }
 }
 
