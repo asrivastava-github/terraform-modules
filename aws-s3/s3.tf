@@ -1,4 +1,4 @@
-resource "aws_s3_bucket" "demo" {
+resource "aws_s3_bucket" "repo" {
   bucket = var.bucket_name
 
   tags = {
@@ -8,6 +8,6 @@ resource "aws_s3_bucket" "demo" {
 }
 
 resource "aws_s3_bucket_acl" "acl" {
-  bucket = aws_s3_bucket.demo.id
+  bucket = aws_s3_bucket.repo.id
   acl    = var.acl
 }
