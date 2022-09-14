@@ -37,7 +37,7 @@ resource "aws_subnet" "private" {
   }
 }
 
-# Create and attach a Network access control list to private subnet for traffic control
+# Create and attach a NACL to private subnet for traffic control
 resource "aws_network_acl" "nacl_private" {
   vpc_id     = aws_vpc.demo.id
   subnet_ids = [for k, v in aws_subnet.private : aws_subnet.private[k].id]
@@ -47,7 +47,7 @@ resource "aws_network_acl" "nacl_private" {
   depends_on = [aws_vpc.demo]
 }
 
-# Provide a way for DynamoDB response to reach to lambda. Access on ephemeral ports
+# Allow DynamoDB response on ephemeral ports to lambda
 resource "aws_network_acl_rule" "private_nacl_rules_in_dynamoDB_EP" {
   network_acl_id = aws_network_acl.nacl_private.id
   protocol       = "tcp"
@@ -62,16 +62,14 @@ resource "aws_network_acl_rule" "private_nacl_rules_in_dynamoDB_EP" {
   depends_on = [aws_vpc.demo]
 }
 
+# DynamoDB & s3 endpoint and it's route
 data "aws_vpc_endpoint_service" "s3" {
-  count = local.one_time
-
   service      = "s3"
   service_type = "Gateway"
 }
 
 resource "aws_vpc_endpoint" "s3" {
   count = local.one_time
-
   vpc_id       = aws_vpc.demo.id
   service_name = data.aws_vpc_endpoint_service.s3[0].service_name
   tags = {
@@ -81,20 +79,17 @@ resource "aws_vpc_endpoint" "s3" {
 
 resource "aws_vpc_endpoint_route_table_association" "private_s3" {
   count = local.one_time
-
   vpc_endpoint_id = aws_vpc_endpoint.s3[0].id
   route_table_id  = aws_route_table.private_route_table.id
 }
 
 data "aws_vpc_endpoint_service" "dynamodb" {
-  count = local.one_time
-
   service = "dynamodb"
+  service_type = "Gateway"
 }
 
 resource "aws_vpc_endpoint" "dynamodb" {
-  count = local.one_time
-
+  count        = local.one_time
   vpc_id       = aws_vpc.demo.id
   service_name = data.aws_vpc_endpoint_service.dynamodb[0].service_name
   tags = {
@@ -102,14 +97,8 @@ resource "aws_vpc_endpoint" "dynamodb" {
   }
 }
 
-data "aws_subnet" "demo" {
-  for_each = local.private_subnet_map
-  id       = aws_subnet.private[each.key].id
-}
-
 resource "aws_vpc_endpoint_route_table_association" "private_dynamodb" {
-  count = local.one_time
-
+  count           = local.one_time
   vpc_endpoint_id = aws_vpc_endpoint.dynamodb[0].id
   route_table_id  = aws_route_table.private_route_table.id
 }
