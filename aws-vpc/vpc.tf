@@ -62,6 +62,21 @@ resource "aws_network_acl_rule" "private_nacl_rules_in_dynamoDB_EP" {
   depends_on = [aws_vpc.demo]
 }
 
+resource "aws_network_acl_rule" "private_nacl_rules_out" {
+  network_acl_id = aws_network_acl.nacl_private.id
+  protocol       = "tcp"
+  rule_action    = "allow"
+  rule_number    = 100
+  cidr_block     = "0.0.0.0/0"
+  to_port        = 443
+  from_port      = 443
+  egress         = true
+  lifecycle {
+    create_before_destroy = false
+  }
+  depends_on = [aws_vpc.demo]
+}
+
 # DynamoDB & s3 endpoint and it's route
 data "aws_vpc_endpoint_service" "s3" {
   count        = var.enable_s3_vpc_endpoint ? 1 : 0
