@@ -69,29 +69,29 @@ data "aws_vpc_endpoint_service" "s3" {
 }
 
 resource "aws_vpc_endpoint" "s3" {
-  count = local.one_time
+  count        = local.one_time
   vpc_id       = aws_vpc.demo.id
-  service_name = data.aws_vpc_endpoint_service.s3[0].service_name
+  service_name = data.aws_vpc_endpoint_service.s3.service_name
   tags = {
     Name = "${var.project}-s3-endpoint"
   }
 }
 
 resource "aws_vpc_endpoint_route_table_association" "private_s3" {
-  count = local.one_time
-  vpc_endpoint_id = aws_vpc_endpoint.s3[0].id
+  count           = local.one_time
+  vpc_endpoint_id = aws_vpc_endpoint.s3.id
   route_table_id  = aws_route_table.private_route_table.id
 }
 
 data "aws_vpc_endpoint_service" "dynamodb" {
-  service = "dynamodb"
+  service      = "dynamodb"
   service_type = "Gateway"
 }
 
 resource "aws_vpc_endpoint" "dynamodb" {
   count        = local.one_time
   vpc_id       = aws_vpc.demo.id
-  service_name = data.aws_vpc_endpoint_service.dynamodb[0].service_name
+  service_name = data.aws_vpc_endpoint_service.dynamodb.service_name
   tags = {
     Name = "${var.project}-dynamodb-endpoint"
   }
@@ -99,6 +99,6 @@ resource "aws_vpc_endpoint" "dynamodb" {
 
 resource "aws_vpc_endpoint_route_table_association" "private_dynamodb" {
   count           = local.one_time
-  vpc_endpoint_id = aws_vpc_endpoint.dynamodb[0].id
+  vpc_endpoint_id = aws_vpc_endpoint.dynamodb.id
   route_table_id  = aws_route_table.private_route_table.id
 }
