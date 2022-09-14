@@ -64,41 +64,43 @@ resource "aws_network_acl_rule" "private_nacl_rules_in_dynamoDB_EP" {
 
 # DynamoDB & s3 endpoint and it's route
 data "aws_vpc_endpoint_service" "s3" {
+  count        = var.enable_s3_vpc_endpoint ? 1 : 0
   service      = "s3"
   service_type = "Gateway"
 }
 
 resource "aws_vpc_endpoint" "s3" {
-  count        = local.one_time
+  count        = var.enable_s3_vpc_endpoint ? 1 : 0
   vpc_id       = aws_vpc.demo.id
-  service_name = data.aws_vpc_endpoint_service.s3.service_name
+  service_name = data.aws_vpc_endpoint_service.s3[0].service_name
   tags = {
     Name = "${var.project}-s3-endpoint"
   }
 }
 
 resource "aws_vpc_endpoint_route_table_association" "private_s3" {
-  count           = local.one_time
-  vpc_endpoint_id = aws_vpc_endpoint.s3.id
+  count           = var.enable_s3_vpc_endpoint ? 1 : 0
+  vpc_endpoint_id = aws_vpc_endpoint.s3[0].id
   route_table_id  = aws_route_table.private_route_table.id
 }
 
 data "aws_vpc_endpoint_service" "dynamodb" {
+  count        = var.enable_dynamodb_vpc_endpoint ? 1 : 0
   service      = "dynamodb"
   service_type = "Gateway"
 }
 
 resource "aws_vpc_endpoint" "dynamodb" {
-  count        = local.one_time
+  count        = var.enable_dynamodb_vpc_endpoint ? 1 : 0
   vpc_id       = aws_vpc.demo.id
-  service_name = data.aws_vpc_endpoint_service.dynamodb.service_name
+  service_name = data.aws_vpc_endpoint_service.dynamodb[0].service_name
   tags = {
     Name = "${var.project}-dynamodb-endpoint"
   }
 }
 
 resource "aws_vpc_endpoint_route_table_association" "private_dynamodb" {
-  count           = local.one_time
-  vpc_endpoint_id = aws_vpc_endpoint.dynamodb.id
+  count           = var.enable_dynamodb_vpc_endpoint ? 1 : 0
+  vpc_endpoint_id = aws_vpc_endpoint.dynamodb[0].id
   route_table_id  = aws_route_table.private_route_table.id
 }
