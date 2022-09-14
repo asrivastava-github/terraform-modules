@@ -8,14 +8,14 @@ resource "aws_vpc" "demo" {
 resource "aws_route_table" "private_route_table" {
   vpc_id = aws_vpc.demo.id
   tags = {
-    Name = "${var.project}-private"
+    Name = "${var.project}-private-${var.environment}"
   }
 }
 
 resource "aws_default_route_table" "default_route_table" {
   default_route_table_id = aws_vpc.demo.default_route_table_id
   tags = {
-    Name = "${var.project}-default"
+    Name = "${var.project}-default-${var.environment}"
   }
 }
 
@@ -33,7 +33,7 @@ resource "aws_subnet" "private" {
   cidr_block        = var.private_subnets[each.key]
   availability_zone = element(var.azs, each.key)
   tags = {
-    Name = "${var.project}-private-${each.key}"
+    Name = "${var.project}-private-${each.key}-${var.environment}"
   }
 }
 
@@ -42,7 +42,7 @@ resource "aws_network_acl" "nacl_private" {
   vpc_id     = aws_vpc.demo.id
   subnet_ids = [for k, v in aws_subnet.private : aws_subnet.private[k].id]
   tags = {
-    Name = "${var.project}-private-acl"
+    Name = "${var.project}-private-acl-${var.environment}"
   }
   depends_on = [aws_vpc.demo]
 }
@@ -63,14 +63,14 @@ resource "aws_network_acl_rule" "private_nacl_rules_in_dynamoDB_EP" {
 }
 
 data "aws_vpc_endpoint_service" "s3" {
-  count = var.enable_s3_vpc_endpoint ? 1 : 0
+  count = local.one_time
 
   service      = "s3"
   service_type = "Gateway"
 }
 
 resource "aws_vpc_endpoint" "s3" {
-  count = var.enable_s3_vpc_endpoint ? 1 : 0
+  count = local.one_time
 
   vpc_id       = aws_vpc.demo.id
   service_name = data.aws_vpc_endpoint_service.s3[0].service_name
@@ -80,20 +80,20 @@ resource "aws_vpc_endpoint" "s3" {
 }
 
 resource "aws_vpc_endpoint_route_table_association" "private_s3" {
-  count = var.enable_s3_vpc_endpoint ? 1 : 0
+  count = local.one_time
 
   vpc_endpoint_id = aws_vpc_endpoint.s3[0].id
   route_table_id  = aws_route_table.private_route_table.id
 }
 
 data "aws_vpc_endpoint_service" "dynamodb" {
-  count = var.enable_dynamodb_vpc_endpoint ? 1 : 0
+  count = local.one_time
 
   service = "dynamodb"
 }
 
 resource "aws_vpc_endpoint" "dynamodb" {
-  count = var.enable_dynamodb_vpc_endpoint ? 1 : 0
+  count = local.one_time
 
   vpc_id       = aws_vpc.demo.id
   service_name = data.aws_vpc_endpoint_service.dynamodb[0].service_name
@@ -108,7 +108,7 @@ data "aws_subnet" "demo" {
 }
 
 resource "aws_vpc_endpoint_route_table_association" "private_dynamodb" {
-  count = var.enable_dynamodb_vpc_endpoint ? 1 : 0
+  count = local.one_time
 
   vpc_endpoint_id = aws_vpc_endpoint.dynamodb[0].id
   route_table_id  = aws_route_table.private_route_table.id
