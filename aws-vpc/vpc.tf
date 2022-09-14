@@ -85,7 +85,7 @@ data "aws_vpc_endpoint_service" "s3" {
 
 resource "aws_vpc_endpoint" "s3" {
   vpc_id       = aws_vpc.demo.id
-  service_name = data.aws_vpc_endpoint_service.s3[0].service_name
+  service_name = data.aws_vpc_endpoint_service.s3.service_name
   tags = {
     Name = "${var.project}-s3-endpoint-${var.environment}"
   }
@@ -103,7 +103,7 @@ data "aws_vpc_endpoint_service" "dynamodb" {
 
 resource "aws_vpc_endpoint" "dynamodb" {
   vpc_id       = aws_vpc.demo.id
-  service_name = data.aws_vpc_endpoint_service.dynamodb[0].service_name
+  service_name = data.aws_vpc_endpoint_service.dynamodb.service_name
   tags = {
     Name = "${var.project}-dynamodb-endpoint-${var.environment}"
   }
