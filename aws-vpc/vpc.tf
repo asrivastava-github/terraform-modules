@@ -29,7 +29,7 @@ data "aws_iam_policy_document" "vpc_flowlog_policy_document" {
       "logs:DescribeLogStreams"
     ]
     resources = ["*"]
-    sid = "vpcFlowLogCreationPolicy-${var.environment}"
+    sid = "vpcFlowLogCreationPolicy${var.environment}"
     effect = "Allow"
   }
 }
