@@ -42,6 +42,7 @@ resource "aws_cloudwatch_log_group" "vpc-logs" {
 resource "aws_iam_policy" "vpc_flow_logs_policy" {
   name   = "vpcFlowLogCreationPolicy-${var.environment}"
   policy = aws_iam_policy_document.vpc_flowlog_policy_document.json
+}
 
 resource "aws_iam_policy_attachment" "attach_vpc_flow_log_policy" {
   name       = "vpcFlowLogCreation${var.environment}"
