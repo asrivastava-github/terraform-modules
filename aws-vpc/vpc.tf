@@ -38,11 +38,11 @@ resource "aws_iam_policy_attachment" "attach_vpc_flow_log_policy" {
 }
 
 resource "aws_flow_log" "vpc_flow_logs" {
-  iam_role_arn    = aws_iam_role.vpc-logs-role.arn
+  iam_role_arn    = aws_iam_role.vpc_logs_role.arn
   log_destination = aws_cloudwatch_log_group.vpc-logs.arn
   traffic_type    = "ALL"
   vpc_id          = aws_vpc.demo.id
-  depends_on      = [aws_cloudwatch_log_group.vpc-logs, aws_iam_role.vpc-logs-role]
+  depends_on      = [aws_cloudwatch_log_group.vpc-logs, aws_iam_role.vpc_logs_role]
 }
 
 resource "aws_route_table" "private_route_table" {
