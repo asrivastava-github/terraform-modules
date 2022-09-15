@@ -13,7 +13,7 @@ output "vpc_cidr_block" {
   value       = aws_vpc.demo.cidr_block
 }
 
-output "private_subnets" {
+output "private_subnets_cidr" {
   description = "List of private subnets"
   value       = values(aws_subnet.private)[*].id
 }

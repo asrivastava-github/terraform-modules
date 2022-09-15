@@ -5,6 +5,46 @@ resource "aws_vpc" "demo" {
   }
 }
 
+# IAM Access Control (Role and Policy) needed for VPC flow logs
+resource "aws_iam_role" "vpc_logs_role" {
+  name = "vpcFlowLogsAccess-${var.environment}"
+    assume_role_policy = <<EOF
+{"Version": "2012-10-17",
+  "Statement": [{
+    "Sid": "vpcflowlogSTS",
+    "Effect": "Allow",
+    "Principal": {"Service": ["vpc-flow-logs.amazonaws.com"]},
+    "Action": "sts:AssumeRole"}
+  ]
+}
+EOF
+}
+
+resource "aws_cloudwatch_log_group" "vpc-logs" {
+  name              = "vpc-flow-logs-${var.environment}"
+  retention_in_days = "14"
+}
+
+resource "aws_iam_policy" "vpc_flow_logs_policy" {
+  name   = "vpcFlowLogCreationPolicy-${var.environment}"
+  policy = file("./policy/vpc_flow_logs_policy.json")
+}
+
+resource "aws_iam_policy_attachment" "attach_vpc_flow_log_policy" {
+  name       = "vpcFlowLogCreation${var.environment}"
+  policy_arn = aws_iam_policy.vpc_flow_logs_policy.arn
+  roles      = [aws_iam_role.vpc_logs_role.name]
+  depends_on = [aws_iam_role.vpc_logs_role]
+}
+
+resource "aws_flow_log" "vpc_flow_logs" {
+  iam_role_arn    = aws_iam_role.vpc-logs-role.arn
+  log_destination = aws_cloudwatch_log_group.vpc-logs.arn
+  traffic_type    = "ALL"
+  vpc_id          = aws_vpc.demo.id
+  depends_on      = [aws_cloudwatch_log_group.vpc-logs, aws_iam_role.vpc-logs-role]
+}
+
 resource "aws_route_table" "private_route_table" {
   vpc_id = aws_vpc.demo.id
   tags = {
@@ -30,7 +70,7 @@ resource "aws_subnet" "private" {
   for_each = local.private_subnet_map
 
   vpc_id            = aws_vpc.demo.id
-  cidr_block        = var.private_subnets[each.key]
+  cidr_block        = var.private_subnets_cidr[each.key]
   availability_zone = element(var.azs, each.key)
   tags = {
     Name = "${var.project}-private-${each.key}-${var.environment}"

@@ -18,15 +18,9 @@ variable "vpc_cidr_block" {
   type        = string
 }
 
-variable "private_subnets" {
+variable "private_subnets_cidr" {
   description = "The private subnet CIDR ranges."
   type        = list(string)
-}
-
-variable "region" {
-  description = "Region to deploy the application."
-  type        = string
-  default     = "eu-west-1"
 }
 
 variable "enable_s3_vpc_endpoint" {
