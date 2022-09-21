@@ -78,6 +78,9 @@ resource "aws_route_table_association" "private_route_table_association" {
 
   subnet_id      = aws_subnet.private[each.key].id
   route_table_id = aws_route_table.private_route_table.id
+  depends_on     = [
+    aws_subnet.private
+  ]
 }
 
 resource "aws_subnet" "private" {
@@ -98,7 +101,7 @@ resource "aws_network_acl" "nacl_private" {
   tags = {
     Name = "${var.project}-private-acl-${var.environment}"
   }
-  depends_on = [aws_vpc.demo]
+  depends_on = [aws_vpc.demo, aws_subnet.private]
 }
 
 # Allow DynamoDB response on ephemeral ports to lambda
@@ -113,7 +116,7 @@ resource "aws_network_acl_rule" "private_nacl_rules_in_dynamoDB_EP" {
   lifecycle {
     create_before_destroy = false
   }
-  depends_on = [aws_vpc.demo]
+  depends_on = [aws_vpc.demo, aws_network_acl.nacl_private]
 }
 
 resource "aws_network_acl_rule" "private_nacl_rules_out" {
@@ -128,7 +131,7 @@ resource "aws_network_acl_rule" "private_nacl_rules_out" {
   lifecycle {
     create_before_destroy = false
   }
-  depends_on = [aws_vpc.demo]
+  depends_on = [aws_vpc.demo, aws_network_acl.nacl_private]
 }
 
 # DynamoDB & s3 endpoint and it's route
